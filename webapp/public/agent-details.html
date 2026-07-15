@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wisconsin Mutual — Agent Details</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============ HEADER / BRAND BAR ============ -->
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark">WM</div>
+      <div class="brand-text">
+        <span class="brand-name">Wisconsin Mutual</span>
+        <span class="brand-sub">Insurance Company</span>
+      </div>
+    </div>
+    <a href="index.html" class="back-btn">&larr; Back to Home</a>
+  </header>
+
+  <main class="policy-page">
+    <section class="policy-head">
+      <p class="eyebrow">Agent Directory</p>
+      <h1>Agent Details</h1>
+      <p class="policy-lede">
+        The Wisconsin Mutual agents Insura recognizes by code during a verified
+        agent call. Search or filter to view any agent.
+      </p>
+
+      <!-- Controls -->
+      <div class="controls">
+        <input type="search" id="search" class="search-box"
+               placeholder="Search by name, agent code, or role…" />
+        <select id="roleFilter" class="filter"></select>
+      </div>
+      <p class="result-count" id="resultCount"></p>
+    </section>
+
+    <section class="policy-grid agent-grid" id="agentGrid"></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© Wisconsin Mutual Insurance Company — Demonstration</span>
+      <span class="nalashaa">Proof of Concept by <strong>Nalashaa IT Solutions</strong></span>
+    </div>
+  </footer>
+
+  <script>
+    // Agent records embedded from the Retell "N3a Customer Authentication" node
+    // (the AGENT CODES TABLE Insura checks when a WMIC agent calls in).
+    const AGENTS = [
+      { code: "007", name: "Sam Bond",         role: "Senior Service Agent", note: "Warm, brief Bond acknowledgment — one or two lines max" },
+      { code: "121", name: "Lisa Morgan",      role: "Underwriting Agent",   note: "" },
+      { code: "314", name: "Pradeep Rajendra", role: "Account Manager",      note: "Warm, brief π acknowledgment — one line max" },
+      { code: "555", name: "Mike Anderson",    role: "Service Agent",        note: "" },
+      { code: "999", name: "Test Agent",       role: "POC Demo Agent",       note: "" },
+    ];
+
+    const grid = document.getElementById("agentGrid");
+    const search = document.getElementById("search");
+    const roleFilter = document.getElementById("roleFilter");
+    const resultCount = document.getElementById("resultCount");
+
+    // Deterministic accent color per agent (so avatars aren't all identical)
+    const AVATAR_COLORS = ["#1f6fb2", "#0b3d68", "#1f9d55", "#8a5a00", "#6b3fa0"];
+
+    function initials(name) {
+      return name.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+    }
+
+    // Populate the role filter from the data
+    const roles = [...new Set(AGENTS.map(a => a.role))].sort();
+    roleFilter.innerHTML =
+      '<option value="">All roles</option>' +
+      roles.map(r => `<option value="${r}">${r}</option>`).join("");
+
+    function card(a, i) {
+      const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
+      return `
+        <article class="policy-card agent-card">
+          <div class="agent-top">
+            <div class="avatar" style="background:${color}">${initials(a.name)}</div>
+            <div>
+              <h3 class="cust-name">${a.name}</h3>
+              <span class="role-badge">${a.role}</span>
+            </div>
+          </div>
+          <div class="agent-code-row">
+            <span class="code-label">Agent Code</span>
+            <span class="agent-code">${a.code}</span>
+          </div>
+        </article>`;
+    }
+
+    function render() {
+      const q = search.value.trim().toLowerCase();
+      const r = roleFilter.value;
+      const rows = AGENTS.filter(a => {
+        const matchesQ = !q ||
+          a.name.toLowerCase().includes(q) ||
+          a.code.includes(q) ||
+          a.role.toLowerCase().includes(q);
+        return matchesQ && (!r || a.role === r);
+      });
+      grid.innerHTML = rows.length
+        ? rows.map((a, i) => card(a, AGENTS.indexOf(a))).join("")
+        : '<p class="empty">No agents match your search.</p>';
+      resultCount.textContent = `Showing ${rows.length} of ${AGENTS.length} agents`;
+    }
+
+    search.addEventListener("input", render);
+    roleFilter.addEventListener("change", render);
+    render();
+  </script>
+</body>
+</html>

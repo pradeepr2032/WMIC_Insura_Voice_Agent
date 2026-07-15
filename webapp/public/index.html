@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wisconsin Mutual Insurance Company — Meet Insura</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============ HEADER / BRAND BAR ============ -->
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark">WM</div>
+      <div class="brand-text">
+        <span class="brand-name">Wisconsin Mutual</span>
+        <span class="brand-sub">Insurance Company</span>
+      </div>
+    </div>
+    <nav class="top-nav">
+      <a href="policy-details.html" class="nav-policy">Policy Details</a>
+      <a href="agent-details.html" class="nav-policy">Agent Details</a>
+      <a href="https://www1.wiins.com/products/home/" target="_blank" rel="noopener">Homeowners</a>
+      <a href="https://www1.wiins.com/products/auto/" target="_blank" rel="noopener">Automobile</a>
+      <a href="https://www1.wiins.com/products/farm/" target="_blank" rel="noopener">Farmowner</a>
+      <a href="https://www1.wiins.com/products/commercial/" target="_blank" rel="noopener">Businessowners</a>
+      <a href="https://www1.wiins.com/products/dwelling/" target="_blank" rel="noopener">Dwelling Fire</a>
+      <a href="https://www1.wiins.com/products/umbrella/" target="_blank" rel="noopener">Umbrella</a>
+    </nav>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">24/7 Voice Assistant</p>
+        <h1>Meet <span class="accent">Insura</span></h1>
+        <p class="lede">
+          Your Wisconsin Mutual insurance support assistant. Ask about your
+          policy, coverage, billing, or start a claim — just talk, and Insura
+          listens.
+        </p>
+        <ul class="hero-points">
+          <li>Policy &amp; coverage questions</li>
+          <li>Billing &amp; payments</li>
+          <li>First notice of loss / claims</li>
+          <li>Find your local agent</li>
+        </ul>
+      </div>
+
+      <!-- ============ CALL CARD ============ -->
+      <div class="call-card">
+        <div class="orb" id="orb">
+          <div class="orb-core"></div>
+          <div class="orb-ring"></div>
+        </div>
+        <p class="call-status" id="callStatus">Ready when you are</p>
+        <button id="callBtn" class="call-btn">
+          <span class="mic-icon">🎙️</span>
+          <span id="callBtnLabel">Talk to Insura</span>
+        </button>
+        <p class="call-hint" id="callHint">
+          Click to start — your browser will ask for microphone access.
+        </p>
+
+        <div class="phone-divider"><span>or call from any phone</span></div>
+        <a href="tel:+16089098592" class="phone-cta">
+          <span class="phone-icon">📞</span>
+          <span class="phone-num">+1 (608) 909-8592</span>
+        </a>
+        <p class="phone-tagline">Insura answers 24/7 — real help, the moment you need it.</p>
+      </div>
+    </section>
+
+    <!-- ============ LIVE TRANSCRIPT ============ -->
+    <section class="transcript-section" id="transcriptSection" hidden>
+      <h2>Live conversation</h2>
+      <div class="transcript" id="transcript"></div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© Wisconsin Mutual Insurance Company — Demonstration</span>
+      <span class="nalashaa">
+        Proof of Concept delivered by
+        <img src="nalashaa-logo.png" alt="Nalashaa" class="nalashaa-logo"
+             onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<strong>Nalashaa IT Solutions</strong>');" />
+      </span>
+    </div>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wisconsin Mutual — Policy Details</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============ HEADER / BRAND BAR ============ -->
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark">WM</div>
+      <div class="brand-text">
+        <span class="brand-name">Wisconsin Mutual</span>
+        <span class="brand-sub">Insurance Company</span>
+      </div>
+    </div>
+    <a href="index.html" class="back-btn">&larr; Back to Home</a>
+  </header>
+
+  <main class="policy-page">
+    <section class="policy-head">
+      <p class="eyebrow">Customer Policy Records</p>
+      <h1>Policy Details</h1>
+      <p class="policy-lede">
+        The policy records Insura reads back during a verified phone lookup.
+        Search or filter to view any customer's policy.
+      </p>
+
+      <!-- Controls -->
+      <div class="controls">
+        <input type="search" id="search" class="search-box"
+               placeholder="Search by name, policy number, or city…" />
+        <select id="typeFilter" class="filter"></select>
+        <select id="statusFilter" class="filter">
+          <option value="">All statuses</option>
+          <option value="Active">Active</option>
+          <option value="Pending">Pending</option>
+          <option value="Expired">Expired</option>
+        </select>
+      </div>
+      <p class="result-count" id="resultCount"></p>
+    </section>
+
+    <section class="policy-grid" id="policyGrid"></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© Wisconsin Mutual Insurance Company — Demonstration</span>
+      <span class="nalashaa">Proof of Concept by <strong>Nalashaa IT Solutions</strong></span>
+    </div>
+  </footer>
+
+  <script>
+    // Policy records embedded from the Retell "N27a Policy Lookup Mode" node
+    // (the POLICY REFERENCE TABLE Insura reads back to verified callers).
+    const POLICIES = [
+      { num: "WMIC-PL-100012", name: "Deborah Hansen",     type: "Home Insurance",          status: "Active",  renewal: "2026-11-23", premium: "$1,382", cycle: "year",  limit: "$200,000",   details: "Dwelling, personal property, and liability coverage",                    addons: "Water backup endorsement",       city: "Appleton, WI" },
+      { num: "WMIC-PL-100006", name: "Mark Anderson",      type: "Home Insurance",          status: "Active",  renewal: "2027-04-17", premium: "$1,358", cycle: "year",  limit: "$900,000",   details: "Standard HO-3 with full replacement cost on dwelling and contents",       addons: "None",                            city: "Plymouth, MN" },
+      { num: "WMIC-PL-100003", name: "Catherine Peterson", type: "Home Insurance",          status: "Expired", renewal: "2025-12-30", premium: "$135",   cycle: "month", limit: "$900,000",   details: "Standard HO-3 with full replacement cost on dwelling and contents",       addons: "Identity theft protection",       city: "Minneapolis, MN" },
+      { num: "WMIC-PL-100023", name: "Daniel Walker",      type: "Auto Insurance",          status: "Active",  renewal: "2027-09-01", premium: "$70",    cycle: "month", limit: "$100,000",   details: "Liability, collision, comprehensive, and uninsured motorist",              addons: "Glass coverage",                  city: "Blaine, MN" },
+      { num: "WMIC-PL-100034", name: "Lisa Perez",         type: "Auto Insurance",          status: "Active",  renewal: "2026-11-04", premium: "$2,549", cycle: "year",  limit: "$300,000",   details: "Liability, collision, comprehensive, UM/UIM, and rental reimbursement",    addons: "Roadside assistance",             city: "Greenfield, WI" },
+      { num: "WMIC-PL-100028", name: "Joseph Taylor",      type: "Auto Insurance",          status: "Pending", renewal: "2026-05-28", premium: "$1,205", cycle: "year",  limit: "$150,000",   details: "Full coverage with collision, comprehensive, and medical payments",        addons: "Rental reimbursement",            city: "Oshkosh, WI" },
+      { num: "WMIC-PL-100040", name: "John White",         type: "Farm Insurance",          status: "Active",  renewal: "2026-06-07", premium: "$4,126", cycle: "year",  limit: "$2,000,000", details: "Comprehensive farm package with liability and machinery breakdown",        addons: "Farm machinery rider",            city: "Cottage Grove, WI" },
+      { num: "WMIC-PL-100038", name: "Patricia White",     type: "Farm Insurance",          status: "Active",  renewal: "2027-02-22", premium: "$2,927", cycle: "year",  limit: "$400,000",   details: "Farm dwelling, outbuildings, equipment, and farm personal property",       addons: "Crop hail rider",                 city: "Stoughton, WI" },
+      { num: "WMIC-PL-100050", name: "Carol Moore",        type: "Dwelling Fire Insurance", status: "Active",  renewal: "2027-04-23", premium: "$60",    cycle: "month", limit: "$180,000",   details: "DP-3 special form with replacement cost on dwelling",                      addons: "Liability extension",             city: "Kenosha, WI" },
+      { num: "WMIC-PL-100047", name: "Linda Adams",        type: "Dwelling Fire Insurance", status: "Pending", renewal: "2026-06-29", premium: "$156",   cycle: "month", limit: "$350,000",   details: "DP-3 special form with replacement cost on dwelling",                      addons: "Loss of rents",                   city: "Saint Paul, MN" },
+      { num: "WMIC-PL-100059", name: "Deborah Adams",      type: "Commercial Insurance",    status: "Active",  renewal: "2026-11-27", premium: "$1,913", cycle: "year",  limit: "$500,000",   details: "BOP for small business with property and liability",                       addons: "Equipment breakdown",             city: "Waukesha, WI" },
+      { num: "WMIC-PL-100056", name: "Catherine Wagner",   type: "Commercial Insurance",    status: "Active",  renewal: "2027-09-10", premium: "$3,078", cycle: "year",  limit: "$500,000",   details: "BOP with general liability, property, and business income",                addons: "Hired and non-owned auto",        city: "Marshfield, WI" },
+      { num: "WMIC-PL-100061", name: "John Krueger",       type: "Umbrella Insurance",      status: "Active",  renewal: "2027-09-08", premium: "$714",   cycle: "year",  limit: "$2,000,000", details: "Personal umbrella with worldwide coverage",                                addons: "Worldwide coverage",              city: "Sheboygan, WI" },
+      { num: "WMIC-PL-100062", name: "Daniel Campbell",    type: "Umbrella Insurance",      status: "Active",  renewal: "2026-10-15", premium: "$888",   cycle: "year",  limit: "$3,000,000", details: "Excess liability over underlying home, auto, and watercraft",              addons: "Underlying watercraft included",  city: "DeForest, WI" },
+      { num: "WMIC-PL-100063", name: "Sarah Schneider",    type: "Umbrella Insurance",      status: "Expired", renewal: "2025-12-15", premium: "$38",    cycle: "month", limit: "$3,000,000", details: "Personal umbrella with worldwide coverage",                                addons: "Underlying watercraft included",  city: "Stoughton, WI" },
+    ];
+
+    // Phone on file per policy. Last 4 digits are the REAL verification factor
+    // from the node's table; area code + prefix are mocked to match each city.
+    const PHONES = {
+      "WMIC-PL-100012": "(920) 415-2464",
+      "WMIC-PL-100006": "(763) 288-4900",
+      "WMIC-PL-100003": "(612) 337-5442",
+      "WMIC-PL-100023": "(763) 502-1247",
+      "WMIC-PL-100034": "(414) 771-6448",
+      "WMIC-PL-100028": "(920) 236-8747",
+      "WMIC-PL-100040": "(608) 839-7391",
+      "WMIC-PL-100038": "(608) 873-1427",
+      "WMIC-PL-100050": "(262) 654-2158",
+      "WMIC-PL-100047": "(651) 429-9212",
+      "WMIC-PL-100059": "(262) 547-3959",
+      "WMIC-PL-100056": "(715) 384-7274",
+      "WMIC-PL-100061": "(920) 458-3054",
+      "WMIC-PL-100062": "(608) 846-6429",
+      "WMIC-PL-100063": "(608) 873-6815",
+    };
+
+    const grid = document.getElementById("policyGrid");
+    const search = document.getElementById("search");
+    const typeFilter = document.getElementById("typeFilter");
+    const statusFilter = document.getElementById("statusFilter");
+    const resultCount = document.getElementById("resultCount");
+
+    // Icon per policy type
+    const TYPE_ICON = {
+      "Home Insurance": "🏠",
+      "Auto Insurance": "🚗",
+      "Farm Insurance": "🌾",
+      "Dwelling Fire Insurance": "🔥",
+      "Commercial Insurance": "🏢",
+      "Umbrella Insurance": "☂️",
+    };
+
+    // Populate the type filter from the data
+    const types = [...new Set(POLICIES.map(p => p.type))].sort();
+    typeFilter.innerHTML =
+      '<option value="">All policy types</option>' +
+      types.map(t => `<option value="${t}">${t}</option>`).join("");
+
+    function friendlyDate(iso) {
+      const [y, m, d] = iso.split("-").map(Number);
+      const months = ["January","February","March","April","May","June",
+        "July","August","September","October","November","December"];
+      return `${months[m - 1]} ${d}, ${y}`;
+    }
+
+    function card(p) {
+      const icon = TYPE_ICON[p.type] || "📄";
+      const addons = p.addons === "None"
+        ? '<span class="no-addon">No add-ons</span>'
+        : `<span class="addon-chip">${p.addons}</span>`;
+      return `
+        <article class="policy-card status-${p.status.toLowerCase()}">
+          <div class="card-top">
+            <div class="type-badge"><span class="type-icon">${icon}</span>${p.type}</div>
+            <span class="status-pill">${p.status}</span>
+          </div>
+          <h3 class="cust-name">${p.name}</h3>
+          <p class="policy-num">${p.num}</p>
+          <dl class="policy-fields">
+            <div><dt>Premium</dt><dd class="premium">${p.premium}<span>/${p.cycle}</span></dd></div>
+            <div><dt>Coverage limit</dt><dd>${p.limit}</dd></div>
+            <div><dt>Renewal date</dt><dd>${friendlyDate(p.renewal)}</dd></div>
+            <div><dt>Location</dt><dd>${p.city}</dd></div>
+          </dl>
+          <div class="contact-row">
+            <span class="contact-icon">📞</span>
+            <span class="contact-label">Phone on file</span>
+            <a class="contact-num" href="tel:+1${(PHONES[p.num] || '').replace(/\D/g, '')}">${PHONES[p.num] || '—'}</a>
+          </div>
+          <div class="coverage">
+            <dt>What it covers</dt>
+            <dd>${p.details}</dd>
+          </div>
+          <div class="addons-row">${addons}</div>
+        </article>`;
+    }
+
+    function render() {
+      const q = search.value.trim().toLowerCase();
+      const t = typeFilter.value;
+      const s = statusFilter.value;
+      const rows = POLICIES.filter(p => {
+        const matchesQ = !q ||
+          p.name.toLowerCase().includes(q) ||
+          p.num.toLowerCase().includes(q) ||
+          p.city.toLowerCase().includes(q);
+        return matchesQ && (!t || p.type === t) && (!s || p.status === s);
+      });
+      grid.innerHTML = rows.length
+        ? rows.map(card).join("")
+        : '<p class="empty">No policies match your search.</p>';
+      resultCount.textContent =
+        `Showing ${rows.length} of ${POLICIES.length} policies`;
+    }
+
+    search.addEventListener("input", render);
+    typeFilter.addEventListener("change", render);
+    statusFilter.addEventListener("change", render);
+    render();
+  </script>
+</body>
+</html>
