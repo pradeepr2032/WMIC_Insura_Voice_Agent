@@ -4,3 +4,4 @@ node_modules/
 !*.env.example
 .DS_Store
 Demo-Presentation/
+RETELL_Conversation_nodes/
